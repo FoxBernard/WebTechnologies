@@ -1,3 +1,8 @@
+// Models files sets the database schema 
+
+// unique : true helps prevent duplicate usernames or emails
+// trim : removes whitespace from the beginning and end of a string operation 
+
 const mongoose = require("mongoose")
 
 const TaskSchema = new mongoose.Schema({
