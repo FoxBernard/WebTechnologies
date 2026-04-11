@@ -5,23 +5,19 @@ const mongoose = require("mongoose")
 const InvitationsSchema = new mongoose.Schema({
 
 // Each Invitation has a invitationID, eventID, userID, status ( Invited / accepted / declined )
-// trim : removes whitespace from the beginning and end of a string operation 
-
-  invitationID: {
-    type: Number,
-    unique: true,
-    required: true
-  },
+ 
+ // invitationID is not required as mongoose already creates a _ID for each entry, by doing this redundancy is avoided 
 
   eventID: {
-    type: Number,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Event",
     required: true,
   },
 
   userID: {
-    type: Number,
+    type: mongoose.Schema.Types.ObjectId,
     required: true,
-    ref: "User",
+    ref: "User", // This is where relantionship between tables is created 
   },
 
   status: {
@@ -38,4 +34,4 @@ const InvitationsSchema = new mongoose.Schema({
 InvitationsSchema.index({ userID: 1, eventID: 1}, {unique: true});
 
 
-module.exports = mongoose.model("Invitations", InvitationsSchema)
+module.exports = mongoose.model("Invitation", InvitationsSchema)
