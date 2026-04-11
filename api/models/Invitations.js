@@ -4,7 +4,7 @@ const mongoose = require("mongoose")
 // Invitations database schema 
 const InvitationsSchema = new mongoose.Schema({
 
-// Each Invitation has a invitationID, eventID, userID, status ( Invited / accepted / declined )
+// Each Invitation has a invitationID, eventID, userID, status ("invited", "attending", "declined", "maybe" )
  
  // invitationID is not required as mongoose already creates a _ID for each entry, by doing this redundancy is avoided 
 
@@ -22,16 +22,19 @@ const InvitationsSchema = new mongoose.Schema({
 
   status: {
     type: String,
-    enum: ["invited", "attending", "not_attending", "maybe"],
+    enum: ["invited", "attending", "declined", "maybe"],
     default: "invited",
     required: true,
   }
 
   
-})
+}, 
+
+// Records when invitation was created
+{ timestamps: true });
 
 // Preventing duplicate invitations so that same user doesn't get invited more than once 
 InvitationsSchema.index({ userID: 1, eventID: 1}, {unique: true});
 
 
-module.exports = mongoose.model("Invitation", InvitationsSchema)
+module.exports = mongoose.model("Invitation", InvitationsSchema);
