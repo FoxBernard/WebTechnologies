@@ -24,12 +24,12 @@ const EventsSchema = new mongoose.Schema({
     },
 
     location: {
-        type: text,
+        type: String,
         required: true
     },
 
     venue: {
-        type: text,
+        type: String,
         required: true
     },
 

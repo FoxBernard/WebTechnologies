@@ -31,7 +31,10 @@ require('dotenv').config();
 // Import route files (modular structure)
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
-const tasksRouter = require('./routes/tasks');
+const eventsRouter = require('./routes/events');
+const invitationsRouter = require('./routes/invitations');
+const commentsRouter = require('./routes/comments');
+
 
 //new 
 const authRoutes = require("./routes/auth"); 
@@ -100,12 +103,13 @@ app.use(session({
 
 // ROUTES (API ENDPOINTS)
 app.use('/', indexRouter); // Optional - can be used for a simple test route or homepage
+app.use('/events', eventsRouter);
+app.use('/invitations', invitationsRouter);
+app.use('/comments', commentsRouter);
 
 // All user-related routes
 app.use('/api/users', usersRouter);
 
-// All task-related routes
-app.use('/api/tasks', tasksRouter);
 
 //new
 app.use("/api/auth", authRoutes);
