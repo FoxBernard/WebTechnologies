@@ -1,19 +1,19 @@
 const express = require("express");
 const router = express.Router();
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 
 const User = require("../models/User");
 
 // REGISTER
 router.post("/register", async (req, res) => {
     try {
-        const { username, email, password, role } = req.body;
+        const { username, email, password, role, firstName, lastName, dateOfBirth } = req.body;
 
         // Validation
-        if (!username || !email || !password) {
+        if (!username || !email || !password || !firstName || !lastName || !dateOfBirth) {
             return res.status(400).json({
                 success: false,
-                message: "Username, email and password are required"
+                message: "Username, email , password, first name, last name and date of birth are required.."
             });
         }
 
@@ -42,7 +42,10 @@ router.post("/register", async (req, res) => {
             username,
             email,
             password: hashedPassword,
-            role: role || "user"
+            role: role || "user",
+            firstName,
+            lastName,
+            dateOfBirth
         });
 
         await user.save();

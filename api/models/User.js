@@ -1,6 +1,6 @@
 const mongoose = require("mongoose")
 // Adding bcryot for password encryption so they are not saved as plain visible text
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 
 // Sets up the User schema 
 const UserSchema = new mongoose.Schema({
@@ -57,22 +57,13 @@ Middleware
 */
 
 // Hashing password before saving it for safety reasons 
-UserSchema.pre("save", async function (next) {
 
-  // Only has is password has being modified
-  if (!this.isModified("password")) {
-    return next();
-  }
-
-  try {
-    const salt = await bcrypt.genSalt(10);
-    this.password = await bcrypt.hash(this.password, salt);
-    next();
-  } catch (err) {
-    next(err);
-  }
-
+UserSchema.pre('save', async function() {
+  //If the password hasn't changed, don't bother rehashing it..
+  if(!this.isModified('password')) return;
+  this.password = await bcrypt.hash(this.password, 10);
 });
+
 
 // Comparison for Login purpose
 UserSchema.methods.comparePassword = async function ( userPassword ) {
