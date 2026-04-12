@@ -28,4 +28,4 @@ const CommentsSchema = new mongoose.Schema({
 // Timestamp register dateOfComment of the new comment 
 {timestamps: true});
 
-module.exports = mongoose.model("Comment", CommmentsSchema);
+module.exports = mongoose.model("Comment", CommentsSchema);
