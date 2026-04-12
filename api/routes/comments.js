@@ -21,7 +21,7 @@ router.post("/", auth, async function ( req, res ) {
     try {
         const comment = await Comment.create({
             eventID: req.body.eventID,
-            userID: req.session.user._id,
+            userID: req.user._id,
             comment: req.body.comment       
         });
         res.json(comment);
@@ -45,7 +45,7 @@ router.delete("/:id", auth, async function ( req, res ) {
         }
 
         // Only owner can delete its comment 
-        if ( comment.userID.toString() !== req.session.user._id.toString()) {
+        if ( comment.userID.toString() !== req.user._id.toString()) {
             return res.status(403).json({ error : "Not allowed to delete this comment."})
         } 
 
@@ -63,18 +63,25 @@ router.delete("/:id", auth, async function ( req, res ) {
 router.put("/:id", auth, async function(req,res) {
 
     try {
+        // Fetch the comment to be updated 
+        const comment = await Comment.findById(req.params.id);
+
+        // Check if comment is found 
+        if (!comment) {
+            return res.status(404).json({ error: "Comment not found."});
+        }
+
+         // Only owner can update its comment 
+        if ( comment.userID.toString() !== req.user._id.toString()) {
+            return res.status(403).json({ error : "Not allowed to update this comment."})
+        } 
+
         const updated = await Comment.findByIdAndUpdate( req.params.id, { comment : req.body.comment }, { new : true, runValidators: true});
 
         // Check if comment to be uodated exists 
         if (!updated) {
             return res.status(404).json({ error: "Comment not found" });
         }
-
-    
-        // Only owner can update its comment 
-        if ( comment.userID.toString() !== req.session.user._id.toString()) {
-            return res.status(403).json({ error : "Not allowed to update this comment."})
-        } 
 
         res.json(updated);
 
