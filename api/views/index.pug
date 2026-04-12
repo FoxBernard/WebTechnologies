@@ -2,4 +2,10 @@ extends layout
 
 block content
   h1= title
-  p Welcome to #{title}
+  //p Welcome to #{title}
+  p Welcome to the API for Invyte. The available endpoints are:
+  p #{endpoints.auth}
+  p #{endpoints.comments}
+  p #{endpoints.events}
+  p #{endpoints.invitations}
+  p #{endpoints.users}
