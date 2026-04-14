@@ -64,8 +64,6 @@ Middleware
 */
 
 // Hashing password before saving it for safety reasons 
-<<<<<<< HEAD
-=======
 UserSchema.pre("save", async function () {
 
   // Only has is password has being modified
@@ -73,17 +71,8 @@ UserSchema.pre("save", async function () {
     return;
   }
 
-  const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
-
->>>>>>> 0b7babf ( All API's tested and working with bruno)
-
-UserSchema.pre('save', async function() {
-  //If the password hasn't changed, don't bother rehashing it..
-  if(!this.isModified('password')) return;
-  this.password = await bcrypt.hash(this.password, 10);
 });
-
 
 // Comparison for Login purpose
 UserSchema.methods.comparePassword = async function ( userPassword ) {
