@@ -1,6 +1,6 @@
 const express = require("express")
 const router = express.Router()
-const Event = require("../models/Event")
+const EventModel = require("../models/Event")
 const auth = require("../middleware/auth")
 
 
@@ -8,7 +8,7 @@ const auth = require("../middleware/auth")
 router.get("/", auth, async function (req, res) {
     
     try {
-        const events = await Event.find();
+        const events = await EventModel.find();
         res.json(events);
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -20,7 +20,7 @@ router.get("/", auth, async function (req, res) {
 router.get("/:id", auth, async function (req, res) {
 
     try {
-        const event = await Event.findById(req.params.id);
+        const event = await EventModel.findById(req.params.id);
 
         // Check if event was founf
         if (!event) {
@@ -44,12 +44,17 @@ router.post("/", auth, async function ( req, res ) {
             return res.status(403).json({ error: "Only hosts can create events." });
         }
 
-
         // Create event 
-        const event = await Event.create({...req.body, hostID: req.user.id});
-        res.json(event);
+        const { title, date, location, venue, description } = req.body;
+
+        if (!title || !date || !location || !venue ) {
+            return res.status(400).json({ error: "Title, date, location, and venue are required"});
+        }
+
+        const event = await EventModel.create({...req.body, hostID: req.user.id});
+        res.status(201).json(event);
     } catch (err) {
-        res.status(500).json({ error : " Event could not be created."})
+        res.status(500).json({ error : err.message });
     }
 
 });
@@ -58,7 +63,7 @@ router.post("/", auth, async function ( req, res ) {
 router.delete("/:id", auth, async function ( req, res ) {
     try {
     
-        const event = await Event.findById(req.params.id);
+        const event = await EventModel.findById(req.params.id);
 
         // If event is not found return 404 error
         if (!event) {
@@ -71,8 +76,8 @@ router.delete("/:id", auth, async function ( req, res ) {
         }
         
         // Delete event
-        await Event.findByIdAndDelete(req.params.id)
-        res.json({ message : "Event succesfully deleted. "})
+        await EventModel.deleteOne();
+        res.json({ message : "Event succesfully deleted. "});
 
     } catch (err) {
         res.status(500).json({ error: err.message })
@@ -84,7 +89,12 @@ router.delete("/:id", auth, async function ( req, res ) {
 router.put("/:id", auth, async function(req,res) {
     
     try {
-        const event = await Event.findById(req.params.id);
+
+        console.log("PARAM ID:", req.params.id);
+        console.log("TYPE:", typeof req.params.id);
+        console.log("LENGTH:", req.params.id.length);
+
+        const event = await EventModel.findById(req.params.id);
 
         // If event is not found return 404 error
         if (!event) {
@@ -97,11 +107,11 @@ router.put("/:id", auth, async function(req,res) {
         }
 
         // Update event
-        const updatedEvent = await Event.findByIdAndUpdate(req.params.id, req.body, { new:true, runValidators: true });
+        const updatedEvent = await EventModel.findByIdAndUpdate(req.params.id, req.body, { new:true, runValidators: true });
         res.json(updatedEvent);
     
     } catch (err) {
-            res.status(500).json({ error : "Event could not be updated." });
+            res.status(500).json({ error : err.message });
     }
     
 });

@@ -42,6 +42,12 @@ const authRoutes = require("./routes/auth");
 // APP SETUP
 var app = express();
 
+// Requeest to check if bruno reaches routes 
+app.post("/test", (req, res) => {
+  console.log("TEST HIT");
+  res.send("Working");
+});
+
 
 // DATABASE CONNECTION (MongoDB)
 

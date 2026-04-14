@@ -7,6 +7,11 @@ const User = require("../models/User");
 // REGISTER
 router.post("/register", async (req, res) => {
     try {
+<<<<<<< HEAD
+=======
+
+        console.log("BODY:", req.body);
+>>>>>>> 0b7babf ( All API's tested and working with bruno)
         const { username, email, password, role, firstName, lastName, dateOfBirth } = req.body;
 
         // Validation
@@ -41,11 +46,19 @@ router.post("/register", async (req, res) => {
         const user = new User({
             username,
             email,
+<<<<<<< HEAD
             password: hashedPassword,
             role: role || "user",
             firstName,
             lastName,
             dateOfBirth
+=======
+            password,
+            role: role || "user",
+            firstName: "TEST",
+            lastName: "TEST",
+            dateOfBirth: new Date("2002-02-19")
+>>>>>>> 0b7babf ( All API's tested and working with bruno)
         });
 
         await user.save();
@@ -65,7 +78,11 @@ router.post("/register", async (req, res) => {
 
 // LOGIN
 router.post("/login", async (req, res) => {
+
+    console.log("LOGIN HIT"); // Check if route is working with bruno
     try {
+
+        
         const { username, password } = req.body;
 
         // Validation
@@ -76,7 +93,13 @@ router.post("/login", async (req, res) => {
             });
         }
 
-        const user = await User.findOne({ username });
+        console.log("LOGIN BODY:", req.body); 
+
+
+        // Allows user to login with email or username 
+        const user = await User.findOne({$or: [{ username: username }, { email: username }] });
+
+        console.log("FOUND USER:", user);
 
         if (!user) {
             return res.status(401).json({
@@ -132,6 +155,15 @@ router.get("/me", (req, res) => {
 
 // LOGOUT
 router.post("/logout", (req, res) => {
+    
+    // This should check if there a user logged in and if there isnt shoudl display the message, but according to bruno its not working yet
+    if (!req.session) {
+        return res.status(400).json({
+        success: false,
+        message: "No active user logged in"
+        });
+    }
+
     req.session.destroy((err) => {
         if (err) {
             return res.status(500).json({

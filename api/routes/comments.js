@@ -3,13 +3,19 @@ const router = express.Router()
 const Comment = require("../models/Comment")
 const auth = require("../middleware/auth")
 
-// GET all comments 
+// GET all comments in a specific event 
 router.get("/", auth, async function (req, res) {
     
     try {
-        const comments = await Comment.find();
+
+        if (!req.query.eventID) {
+            return res.status(400).json({ error: "eventID query parameter is required."});
+        }
+
+        const comments = await Comment.find({ eventID: req.query.eventID});
         res.json(comments);
     } catch (err) {
+        console.error("GET COMMENT ERROR:", err);
         res.status(500).json({ error : err.message });
     }
 
@@ -19,15 +25,25 @@ router.get("/", auth, async function (req, res) {
 router.post("/", auth, async function ( req, res ) {
 
     try {
+
+        console.log("CREATE COMMENT HIT");
+        console.log("BODY:", req.body);
+        console.log("USER:", req.user);
+        
+        if (!req.body.comment || !req.body.eventID) {
+            return res.status(400).json({error: "Comment and eventID are required"});
+        }
+
         const comment = await Comment.create({
             eventID: req.body.eventID,
-            userID: req.user._id,
+            userID: req.user.id,
             comment: req.body.comment       
         });
-        res.json(comment);
+        res.status(201).json(comment);
 
     } catch (err) {
-        res.status(500).json({ error: "Comment could not be posted."})
+        console.error("CREATE COMMENT ERROR:", err);
+        res.status(500).json({ error: err.message });
     }
     
 });
@@ -45,11 +61,11 @@ router.delete("/:id", auth, async function ( req, res ) {
         }
 
         // Only owner can delete its comment 
-        if ( comment.userID.toString() !== req.user._id.toString()) {
+        if ( comment.userID.toString() !== req.user.id.toString()) {
             return res.status(403).json({ error : "Not allowed to delete this comment."})
         } 
 
-        await Comment.findByIdAndDelete(req.params.id);
+        await Comment.deleteOne();
 
         // Succesful message #
         res.json({ message : "Comment deleted. "})
@@ -72,7 +88,7 @@ router.put("/:id", auth, async function(req,res) {
         }
 
          // Only owner can update its comment 
-        if ( comment.userID.toString() !== req.user._id.toString()) {
+        if ( comment.userID.toString() !== req.user.id.toString()) {
             return res.status(403).json({ error : "Not allowed to update this comment."})
         } 
 

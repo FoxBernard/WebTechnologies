@@ -7,7 +7,7 @@ const CommentsSchema = new mongoose.Schema({
     // Each Comment Has eventID, userId, comment, dateOfComment
 
     eventID: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Number,
         ref: "Event",  // This is where relantionship between tables is created
         required: true,
       },

@@ -20,6 +20,13 @@ const UserSchema = new mongoose.Schema({
     trim: true // trim : removes whitespace from the beginning and end of a string operation
   },
 
+  username: {
+    type: String,
+    required: true,
+     unique: true,
+    trim: true
+  },
+
   email: {
     type: String,
     match: [/^\S+@\S+\.\S+$/, "Please use a valid email"], // Adds email validation 
@@ -57,6 +64,19 @@ Middleware
 */
 
 // Hashing password before saving it for safety reasons 
+<<<<<<< HEAD
+=======
+UserSchema.pre("save", async function () {
+
+  // Only has is password has being modified
+  if (!this.isModified("password")) {
+    return;
+  }
+
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
+
+>>>>>>> 0b7babf ( All API's tested and working with bruno)
 
 UserSchema.pre('save', async function() {
   //If the password hasn't changed, don't bother rehashing it..

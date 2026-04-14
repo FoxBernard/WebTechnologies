@@ -8,19 +8,23 @@ const EventsSchema = new mongoose.Schema({
 
     title: {
         type: String,
+        trim: true,
         required :true
     },
 
     description: {
-        type: String,
-        required :true
+        type: String
     },
 
-    dateAndTime: {
+    date: {
+       start: {
         type: Date,
-        startDateTime: Date,
-        endDateTime: Date,
         required: true
+       },
+       end: {
+        type: Date,
+        required: true
+       }
     },
 
     location: {
@@ -35,7 +39,7 @@ const EventsSchema = new mongoose.Schema({
 
     isPrivate: {
         type: Boolean,
-        required: true
+        default: false
     },
 
     hostID: {
