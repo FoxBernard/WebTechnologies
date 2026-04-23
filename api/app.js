@@ -1,16 +1,4 @@
-
 // MAIN EXPRESS APPLICATION FILE
-
-// This file sets up:
-// Express server
-// Middleware
-// MongoDB connection
-// Sessions (for login state)
-// Routes (users and tasks)
-// Error handling
-  
-
-// REQUIRED MODULES
 
 const createError = require('http-errors');
 const express = require('express');
@@ -25,69 +13,57 @@ const mongoose = require('mongoose');
 const session = require('express-session');
 require('dotenv').config();
 
-
 // ROUTES
-
-// Import route files (modular structure)
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const eventsRouter = require('./routes/events');
 const invitationsRouter = require('./routes/invitations');
 const commentsRouter = require('./routes/comments');
-
-
-//new 
-const authRoutes = require("./routes/auth"); 
+const authRoutes = require("./routes/auth");
 
 // APP SETUP
 var app = express();
 
-// Requeest to check if bruno reaches routes 
+// TEST ROUTE
 app.post("/test", (req, res) => {
   console.log("TEST HIT");
   res.send("Working");
 });
 
-
-// DATABASE CONNECTION (MongoDB)
-
-// Connect to MongoDB using Mongoose
-// This allows us to store users, tasks, etc.
+// DATABASE
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('MongoDB connected'))
   .catch((err) => console.log(err));
 
-// CORS CONFIGURATION
 
-// Allows React frontend (port 3000) to talk to backend
+// =======================
+// FIXED CORS FOR VITE (UPDATED)
+// =======================
 app.use(cors({
-  origin: 'http://localhost:3000',
-  credentials: true // IMPORTANT for sessions/cookies
+  origin: 'http://localhost:5173',
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
 }));
 
-// View engine setup. (predefined by boilerplate)
+app.options('*', cors());
+
+
+// VIEW ENGINE
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
 
-// MIDDLEWARE (predefined by boilerplate, I've added the CORS middleware below)
-
-// Logger - shows requests in terminal (GET, POST etc.)
+// MIDDLEWARE
 app.use(logger('dev'));
-// Parse JSON data from requests
 app.use(express.json());
-// Parse form data (URL encoded)
 app.use(express.urlencoded({ extended: false }));
-// Parse cookies from the browser
 app.use(cookieParser());
-// Serve static files (optional - not heavily used in API projects)
 app.use(express.static(path.join(__dirname, 'public')));
 
 
-// SESSION CONFIGURATION
-
-// Stores login state (user stays logged in)
-// Session ID is stored in a cookie in the browser, and session data is stored in MongoDB (instead of memory) for better scalability and persistence.
+// =======================
+// SESSION
+// =======================
 const MongoStore = require('connect-mongo').default;
 
 app.use(session({
@@ -100,29 +76,23 @@ app.use(session({
   }),
 
   cookie: {
-    maxAge: 24 * 60 * 60 * 1000, // 1 day
+    maxAge: 24 * 60 * 60 * 1000,
     secure: false,
     httpOnly: true,
   }
 }));
- 
 
-// ROUTES (API ENDPOINTS)
-app.use('/', indexRouter); // Optional - can be used for a simple test route or homepage
+
+// ROUTES
+app.use('/', indexRouter);
 app.use('/events', eventsRouter);
 app.use('/invitations', invitationsRouter);
 app.use('/comments', commentsRouter);
-
-// All user-related routes
 app.use('/api/users', usersRouter);
-
-
-//new
 app.use("/api/auth", authRoutes);
- 
 
-//new - example of protected route using auth middleware
-// Example protected routes
+
+// AUTH MIDDLEWARE
 const authMiddleware = require("./middleware/auth");
 const roleMiddleware = require("./middleware/roles");
 
@@ -134,29 +104,20 @@ app.get("/admin", authMiddleware, roleMiddleware("admin"), (req, res) => {
   res.json({ message: "Admin panel" });
 });
 
-// ERROR HANDLING
 
-// Catch 404 errors (route not found)
+// ERROR HANDLING
 app.use(function(req, res, next) {
   next(createError(404));
 });
 
-// General error handler
 app.use(function(err, req, res, next) {
-
-  // Show detailed errors in development only
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  // Send error response
   res.status(err.status || 500);
-
-  // For API projects, JSON is better than rendering views
   res.json({
     error: err.message
   });
 });
 
-
-// Export the app module to be used by the server
 module.exports = app;

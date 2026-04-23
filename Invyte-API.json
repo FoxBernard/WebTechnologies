@@ -1,0 +1,275 @@
+{
+  "name": "Invyte-API",
+  "version": "1",
+  "items": [
+    {
+      "type": "folder",
+      "name": "WebTechAPI",
+      "filename": "WebTechAPI"
+    },
+    {
+      "type": "http",
+      "name": "Comment get",
+      "filename": "comment-get.bru",
+      "seq": 1,
+      "request": {
+        "url": "http://localhost:9000/comments?eventID=YOUR_EVENT_ID",
+        "method": "GET",
+        "headers": [],
+        "params": [
+          {
+            "name": "eventID",
+            "value": "YOUR_EVENT_ID",
+            "type": "query",
+            "enabled": true
+          }
+        ],
+        "body": {
+          "mode": "json",
+          "json": "",
+          "formUrlEncoded": [],
+          "multipartForm": [],
+          "file": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "docs": "",
+        "auth": {
+          "mode": "none"
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "delete comment",
+      "filename": "delete-comment.bru",
+      "seq": 1,
+      "request": {
+        "url": "http://localhost:9000/comments/COMMENT_ID",
+        "method": "DELETE",
+        "headers": [],
+        "params": [],
+        "body": {
+          "mode": "none",
+          "formUrlEncoded": [],
+          "multipartForm": [],
+          "file": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "docs": "",
+        "auth": {
+          "mode": "none"
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "delete event",
+      "filename": "delete-event.bru",
+      "seq": 1,
+      "request": {
+        "url": "http://localhost:9000/events/EVENT_ID",
+        "method": "DELETE",
+        "headers": [],
+        "params": [],
+        "body": {
+          "mode": "none",
+          "formUrlEncoded": [],
+          "multipartForm": [],
+          "file": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "docs": "",
+        "auth": {
+          "mode": "none"
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "event post",
+      "filename": "event-post.bru",
+      "seq": 1,
+      "request": {
+        "url": "http://localhost:9000/events",
+        "method": "POST",
+        "headers": [],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"title\": \"Tech Meetup\",\n  \"description\": \"Networking event\",\n  \"date\": {\n    \"start\": \"2026-05-01T18:00:00.000Z\",\n    \"end\": \"2026-05-01T21:00:00.000Z\"\n  },\n  \"location\": \"Dublin\",\n  \"venue\": \"City Hall\",\n  \"isPrivate\": false\n}",
+          "formUrlEncoded": [],
+          "multipartForm": [],
+          "file": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "docs": "",
+        "auth": {
+          "mode": "none"
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "get events",
+      "filename": "get-events.bru",
+      "seq": 1,
+      "request": {
+        "url": "http://localhost:9000/events",
+        "method": "GET",
+        "headers": [],
+        "params": [],
+        "body": {
+          "mode": "none",
+          "formUrlEncoded": [],
+          "multipartForm": [],
+          "file": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "docs": "",
+        "auth": {
+          "mode": "none"
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "login",
+      "filename": "login.bru",
+      "seq": 1,
+      "request": {
+        "url": "http://localhost:9000/api/auth/login",
+        "method": "POST",
+        "headers": [],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"username\": \"host5\",\n  \"password\": \"123456\"\n}",
+          "formUrlEncoded": [],
+          "multipartForm": [],
+          "file": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "docs": "",
+        "auth": {
+          "mode": "none"
+        }
+      }
+    },
+    {
+      "type": "graphql",
+      "name": "New GraphQL Request",
+      "filename": "New GraphQL Request.bru",
+      "seq": 1,
+      "request": {
+        "url": "",
+        "method": "POST",
+        "headers": [],
+        "params": [],
+        "body": {
+          "mode": "none",
+          "graphql": {
+            "query": "query {\n  \n}"
+          },
+          "formUrlEncoded": [],
+          "multipartForm": [],
+          "file": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "docs": "",
+        "auth": {
+          "mode": "none"
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "post comment",
+      "filename": "post-comment.bru",
+      "seq": 1,
+      "request": {
+        "url": "http://localhost:9000/comments",
+        "method": "POST",
+        "headers": [],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"eventID\": \"YOUR_EVENT_ID\",\n  \"comment\": \"Great event!\"\n}",
+          "formUrlEncoded": [],
+          "multipartForm": [],
+          "file": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "docs": "",
+        "auth": {
+          "mode": "none"
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "register",
+      "filename": "register.bru",
+      "seq": 1,
+      "request": {
+        "url": "http://localhost:9000/api/auth/register",
+        "method": "POST",
+        "headers": [],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"username\": \"host5\",\n  \"email\": \"host3@test.com\",\n  \"password\": \"123456\",\n  \"firstName\": \"Host\",\n  \"lastName\": \"Three\",\n  \"dateOfBirth\": \"2002-02-19\",\n  \"role\": \"host\"\n}",
+          "formUrlEncoded": [],
+          "multipartForm": [],
+          "file": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "docs": "",
+        "auth": {
+          "mode": "none"
+        }
+      }
+    }
+  ],
+  "environments": [],
+  "root": {
+    "meta": {
+      "name": "Invyte-API"
+    }
+  },
+  "brunoConfig": {
+    "version": "1",
+    "name": "Invyte-API",
+    "type": "collection",
+    "ignore": [
+      "node_modules",
+      ".git"
+    ]
+  }
+}
