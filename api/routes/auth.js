@@ -7,11 +7,8 @@ const User = require("../models/User");
 // REGISTER
 router.post("/register", async (req, res) => {
     try {
-<<<<<<< HEAD
-=======
 
         console.log("BODY:", req.body);
->>>>>>> 0b7babf ( All API's tested and working with bruno)
         const { username, email, password, role, firstName, lastName, dateOfBirth } = req.body;
 
         // Validation
@@ -46,19 +43,11 @@ router.post("/register", async (req, res) => {
         const user = new User({
             username,
             email,
-<<<<<<< HEAD
             password: hashedPassword,
             role: role || "user",
             firstName,
             lastName,
-            dateOfBirth
-=======
-            password,
-            role: role || "user",
-            firstName: "TEST",
-            lastName: "TEST",
             dateOfBirth: new Date("2002-02-19")
->>>>>>> 0b7babf ( All API's tested and working with bruno)
         });
 
         await user.save();

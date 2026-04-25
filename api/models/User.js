@@ -63,15 +63,11 @@ Middleware
 
 */
 
-// Hashing password before saving it for safety reasons 
 UserSchema.pre("save", async function () {
 
-  // Only has is password has being modified
-  if (!this.isModified("password")) {
-    return;
-  }
+  if (!this.isModified("password")) return;
 
-  this.password = await bcrypt.hash(this.password, salt);
+  this.password = await bcrypt.hash(this.password, 10);
 });
 
 // Comparison for Login purpose
