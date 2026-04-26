@@ -43,10 +43,10 @@ router.post("/register", async (req, res) => {
         const user = new User({
             username,
             email,
-            password: hashedPassword,
+            password,
             role: role || "user",
-            firstName,
-            lastName,
+            firstName: "TEST",
+            lastName: "TEST",
             dateOfBirth: new Date("2002-02-19")
         });
 

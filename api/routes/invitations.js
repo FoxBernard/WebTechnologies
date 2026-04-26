@@ -4,8 +4,6 @@ const Invitation = require("../models/Invitation");
 const auth = require("../middleware/auth");
 const EventModel = require("../models/Event");
 
-console.log("EVENT MODEL:", EventModel);
-
 // GET all invitations 
 router.get("/", auth, async function (req, res) {
 

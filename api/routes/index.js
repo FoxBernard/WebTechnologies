@@ -10,7 +10,7 @@ router.get('/', function(req, res, next) {
       comments: "/comments",
       events: "/events",
       invitations: "/invitations",
-      users: "/users"
+      users: "users"
     }
     });
 });

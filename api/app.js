@@ -22,13 +22,16 @@ const commentsRouter = require('./routes/comments');
 const authRoutes = require("./routes/auth");
 
 // APP SETUP
-var app = express();
+const app = express();
 
 // TEST ROUTE
 app.post("/test", (req, res) => {
   console.log("TEST HIT");
   res.send("Working");
 });
+
+
+console.log("URI:", process.env.MONGO_URI);
 
 // DATABASE
 mongoose.connect(process.env.MONGO_URI)
@@ -85,9 +88,9 @@ app.use(session({
 
 // ROUTES
 app.use('/', indexRouter);
-app.use('/events', eventsRouter);
-app.use('/invitations', invitationsRouter);
-app.use('/comments', commentsRouter);
+app.use('/api/events', eventsRouter);
+app.use('/api/invitations', invitationsRouter);
+app.use('/api/comments', commentsRouter);
 app.use('/api/users', usersRouter);
 app.use("/api/auth", authRoutes);
 
