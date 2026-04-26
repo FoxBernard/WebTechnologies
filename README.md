@@ -6,4 +6,4 @@ The API was thoroughly tested using Bruno, which was used to simulate client req
 
 All work was distributed and completed evenly by all members of the group.
 
-Brendan, Gustavo, Igor, Guillerhme and Thomas.
+Bernardo, Gustavo, Igor, Guilherme and Thomas.
