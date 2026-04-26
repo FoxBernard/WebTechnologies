@@ -2,7 +2,6 @@ import React from "react"
 
 export default function EventCard({ title, description, location, venue, start, end  }) {
 
-    console.log("EventCard props:", { title, description, location, venue, start, end  });
 
     const formattedDate = new Date(start).toLocaleDateString();
     
