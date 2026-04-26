@@ -24,14 +24,18 @@ const authRoutes = require("./routes/auth");
 // APP SETUP
 const app = express();
 
+import Home from "./pages/Home";
+
+function App() {
+  return <Home />;
+}
+
 // TEST ROUTE
 app.post("/test", (req, res) => {
   console.log("TEST HIT");
   res.send("Working");
 });
 
-
-console.log("URI:", process.env.MONGO_URI);
 
 // DATABASE
 mongoose.connect(process.env.MONGO_URI)
