@@ -1,19 +1,19 @@
-import { NavBar } from "../components/navbar";
-import EventCard from "../components/EventCard";
+import  NavBar  from "../components/navbar";
+import SearchBar from "../components/SearchBar";
+import Banner from "../components/Banner";
+import EventList from "../components/EventList";
 import Footer from "../components/footer";
 
 
 export default function Home () {
 
-    return (
-        <>
-      <NavBar />
-
-      <div>
-        <EventCard title="Party 🎉" description="At my place" />
-      </div>
-
-      <Footer />
+  return (
+    <>
+    <NavBar />
+    <SearchBar />
+    <Banner />
+    <EventList />
+    <Footer />
     </>
     );
 }

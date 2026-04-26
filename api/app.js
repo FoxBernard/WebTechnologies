@@ -24,11 +24,6 @@ const authRoutes = require("./routes/auth");
 // APP SETUP
 const app = express();
 
-import Home from "./pages/Home";
-
-function App() {
-  return <Home />;
-}
 
 // TEST ROUTE
 app.post("/test", (req, res) => {

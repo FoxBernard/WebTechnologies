@@ -30,7 +30,7 @@ export default function footer() {
 
             {/* Footer bottom section with copyright notice */}
             <div className="footer-bottom">
-                &copy; {new Date().getFullYear()}INVITY Events Listings. All rights reserved.
+                &copy; {new Date().getFullYear()} INVITY Events Listings. All rights reserved.
             </div>
         </footer>
 

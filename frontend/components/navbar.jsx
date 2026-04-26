@@ -1,12 +1,13 @@
-import react from "react"
+import React from "react";
 
 export default function navBar() {
 
     return (
 
-
-        <h1>Lorem*2
-        </h1>
+        <div className="navbar">
+            <h2> INVITY LOgo</h2>
+            <button>Sign in</button>
+        </div>
 
     );
 }
