@@ -391,4 +391,15 @@ button:hover {
   .footer-top {
     grid-template-columns: 1fr;
   }
+  .auth-link {
+  margin-top: 16px;
+  color: white;
+  text-align: center;
+}
+
+.auth-link span {
+  color: var(--green);
+  font-weight: bold;
+  cursor: pointer;
+}
 }

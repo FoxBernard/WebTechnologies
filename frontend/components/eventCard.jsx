@@ -1,27 +1,21 @@
-import React from "react"
+export default function EventCard({ title, description, location, venue, start }) {
+  const formattedDate = start
+    ? new Date(start).toLocaleString()
+    : "Date TBC";
 
-export default function EventCard({ title, description, location, venue, start, end  }) {
+  return (
+    <div className="eventCard">
+      <div className="imagePlaceholder">
+        <h1>EVENT</h1>
+      </div>
 
-
-    const formattedDate = new Date(start).toLocaleDateString();
-    
-    return (
-
-        <div className="eventCard">
-
-            <div className="imagePlaceholder">
-                <h1>IMAGE FOR EVENT</h1>
-            </div>
-
-            <div className="eventInfo">
-                <h3>{title}</h3>
-                <p>{description}</p>
-                <p><strong>📍 {location}</strong></p>
-                <p>{venue}</p>
-                <p>🕒 {formattedDate}</p>
-            </div>
-
-        </div>
-
-    );
+      <div className="eventInfo">
+        <h3>{title}</h3>
+        <p>{description}</p>
+        <p>📍 {location || "Location TBC"}</p>
+        <p>{venue || "Venue TBC"}</p>
+        <p>🕒 {formattedDate}</p>
+      </div>
+    </div>
+  );
 }
