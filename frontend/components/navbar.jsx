@@ -1,13 +1,16 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
-export default function navBar() {
+export default function NavBar() {
 
     return (
 
         <div className="navbar">
-            <h2> INVITY LOgo</h2>
-            <button>Sign in</button>
+            <h2> INVITY Logo</h2>
+            {/* This links to the login page*/}
+            <Link to="/login"><button>Sign in</button></Link>
         </div>
 
     );
+    
 }

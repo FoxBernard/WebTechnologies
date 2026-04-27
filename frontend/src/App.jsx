@@ -1,11 +1,21 @@
 import { useState } from "react";
 import Home from "../pages/Home";
-import Login from "./Pages/Login";
-import Dashboard from "./Pages/Dashboard";
+import Login from "../pages/Login";
+import Dashboard from "../pages/Dashboard";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 export default function App() {
 
-  return <Home />
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+      </Routes>   
+    </BrowserRouter>
+  
+  );
   
 
   // 🏠 Default = HOME
