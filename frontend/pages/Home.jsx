@@ -1,12 +1,12 @@
-import  NavBar  from "../components/navbar";
+import { useState } from "react";
+
+import NavBar from "../components/navbar";
 import SearchBar from "../components/SearchBar";
 import Banner from "../components/Banner";
 import EventList from "../components/EventList";
 import Footer from "../components/footer";
-import { useState } from "react";
 
-
-export default function Home () {
+export default function Home() {
 
   const [filters, setFilters] = useState({
     location: "",
@@ -16,11 +16,15 @@ export default function Home () {
 
   return (
     <>
-    <NavBar />
-    <SearchBar onSearch={setFilters}/>
-    <Banner />
-    <EventList filters={filters}/>
-    <Footer />
+      <NavBar />
+
+      <SearchBar onSearch={setFilters} />
+
+      <Banner />
+
+      <EventList filters={filters} />
+
+      <Footer />
     </>
-    );
+  );
 }
