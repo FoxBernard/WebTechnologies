@@ -15,21 +15,28 @@ export default function Register() {
 
   const handleRegister = async () => {
     try {
+      const payload = {
+        username: username.trim(),
+        email: email.trim(),
+        password: password,
+        firstName: firstName.trim(),
+        lastName: lastName.trim(),
+        dateOfBirth,
+      };
+
+      // basic frontend validation
+      if (!payload.username || !payload.email || !payload.password) {
+        alert("Please fill in all required fields");
+        return;
+      }
+
       const res = await fetch(`${API_URL}/api/auth/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         credentials: "include",
-        body: JSON.stringify({
-        username,
-        email,
-        password,
-        first_name: firstName,
-        last_name: lastName,
-        date_of_birth: dateOfBirth,
-        role: "user"
-        }),
+        body: JSON.stringify(payload),
       });
 
       const data = await res.json();
@@ -38,12 +45,11 @@ export default function Register() {
         alert("User registered successfully!");
         navigate("/login");
       } else {
-        alert(data.message || data.error);
+        alert(data.message || "Registration failed");
       }
-
     } catch (err) {
-      console.error(err);
-      alert("Error registering user");
+      console.error("REGISTER ERROR:", err);
+      alert("Server error");
     }
   };
 
