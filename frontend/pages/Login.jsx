@@ -74,10 +74,9 @@ export default function Login() {
       </div>
     </div>
   );
-<<<<<<< HEAD
 }
 
 
-=======
 }
->>>>>>> c8aa785074932e171b95456cc1cef906c9a6755c
+
+
