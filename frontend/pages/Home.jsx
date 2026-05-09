@@ -53,11 +53,8 @@ export default function Home() {
           events.map((event) => (
             <EventCard
               key={event._id}
-              title={event.title}
-              description={event.description}
-              location={event.location}
-              venue={event.venue}
-              start={event.date?.start}
+              event={event}
+              showComments={false}   // 👈 HIDE COMMENTS HERE
             />
           ))
         )}
