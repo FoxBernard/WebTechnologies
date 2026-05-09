@@ -1,60 +1,163 @@
 const express = require("express");
 const router = express.Router();
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 
 const User = require("../models/User");
 
-// REGISTER (for testing)
+// REGISTER
 router.post("/register", async (req, res) => {
-    const { username, email, password, role } = req.body;
+    try {
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+        console.log("BODY:", req.body);
+        const { username, email, password, role, firstName, lastName, dateOfBirth } = req.body;
 
-    const user = new User({
-        username,
-        email,
-        password: hashedPassword,
-        role
-    });
+        // Validation
+        if (!username || !email || !password || !firstName || !lastName || !dateOfBirth) {
+            return res.status(400).json({
+                success: false,
+                message: "Username, email , password, first name, last name and date of birth are required.."
+            });
+        }
 
-    await user.save();
+        if (password.length < 6) {
+            return res.status(400).json({
+                success: false,
+                message: "Password must be at least 6 characters long"
+            });
+        }
 
-    res.json({ message: "User registered" });
+        // Check if user already exists
+        const existingUser = await User.findOne({
+            $or: [{ username }, { email }]
+        });
+
+        if (existingUser) {
+            return res.status(409).json({
+                success: false,
+                message: "Username or email already exists"
+            });
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        const user = new User({
+            username,
+            email,
+            password,
+            role: role || "user",
+            firstName: "TEST",
+            lastName: "TEST",
+            dateOfBirth: new Date("2002-02-19")
+        });
+
+        await user.save();
+
+        res.status(201).json({
+            success: true,
+            message: "User registered successfully"
+        });
+    } catch (error) {
+        console.error("Register error:", error);
+        res.status(500).json({
+            success: false,
+            message: "Server error during registration"
+        });
+    }
 });
+
 
 
 // LOGIN
 router.post("/login", async (req, res) => {
+  console.log("LOGIN HIT");
+
+  try {
     const { username, password } = req.body;
 
-    const user = await User.findOne({ username });
+    if (!username || !password) {
+      return res.status(400).json({
+        success: false,
+        message: "Username and password are required",
+      });
+    }
+
+    console.log("LOGIN BODY:", req.body);
+
+    const user = await User.findOne({
+      $or: [{ username }, { email: username }],
+    });
+
+    console.log("FOUND USER:", user);
 
     if (!user) {
-        return res.status(401).json({ message: "User does not" });
+      return res.status(401).json({
+        success: false,
+        message: "User does not exist",
+      });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
-        return res.status(401).json({ message: "Invalid password credentials" });
+      return res.status(401).json({
+        success: false,
+        message: "Invalid password credentials",
+      });
     }
 
-    // Store user in session 
     req.session.user = {
-        id: user._id,
-        username: user.username,
-        role: user.role
-    };
-
-    res.json({ message: "Logged in" });
+  id: user._id.toString(),   // ✅ FIXED
+  username: user.username,
+  role: user.role,
+};
+    res.status(200).json({
+      success: true,
+      message: "Logged in successfully",
+      user: req.session.user,
+    });
+  } catch (error) {
+    console.error("Login error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error during login",
+    });
+  }
 });
 
+module.exports = router;
 // LOGOUT
 router.post("/logout", (req, res) => {
-    req.session.destroy(() => {
+    
+    // This should check if there a user logged in and if there isnt shoudl display the message, but according to bruno its not working yet
+    if (!req.session) {
+        return res.status(400).json({
+        success: false,
+        message: "No active user logged in"
+        });
+    }
+
+    req.session.destroy((err) => {
+        if (err) {
+            return res.status(500).json({
+                success: false,
+                message: "Logout failed"
+            });
+        }
+
         res.clearCookie("connect.sid");
-        res.json({ message: "Logged out" });
+        res.status(200).json({
+            success: true,
+            message: "Logged out successfully"
+        });
     });
+});
+// GET CURRENT USER (SESSION)
+router.get("/me", (req, res) => {
+  if (!req.session.user) {
+    return res.status(401).json({ error: "Not logged in" });
+  }
+
+  res.json({ user: req.session.user });
 });
 
 module.exports = router;

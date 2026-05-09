@@ -1,94 +1,68 @@
-const express = require("express")
-const router = express.Router()
-const Comment = require("../models/Comment")
-const auth = require("../middleware/auth")
+const express = require("express");
+const router = express.Router();
+const Comment = require("../models/Comment");
+const auth = require("../middleware/auth");
 
-// GET all comments 
-router.get("/", auth, async function (req, res) {
-    
-    try {
-        const comments = await Comment.find();
-        res.json(comments);
-    } catch (err) {
-        res.status(500).json({ error : err.message });
-    }
+// =======================
+// GET COMMENTS
+// =======================
+router.get("/", async (req, res) => {
+  const { eventId } = req.query;
 
+  if (!eventId) {
+    return res.status(400).json({ message: "eventId required" });
+  }
+
+  try {
+    const comments = await Comment.find({ eventId })
+      .populate("userID", "username")
+      .lean();
+
+    res.json(comments);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
+//POST
+router.post("/", auth, async (req, res) => {
+  try {
+    const { eventId, comment } = req.body;
 
-// Create Comment
-router.post("/", auth, async function ( req, res ) {
-
-    try {
-        const comment = await Comment.create({
-            eventID: req.body.eventID,
-            userID: req.user._id,
-            comment: req.body.comment       
-        });
-        res.json(comment);
-
-    } catch (err) {
-        res.status(500).json({ error: "Comment could not be posted."})
+    if (!req.user?.id) {
+      return res.status(401).json({ message: "Not logged in" });
     }
-    
+
+    const newComment = await Comment.create({
+      eventId,
+      comment,
+      userID: req.user.id,
+    });
+
+    const populated = await newComment.populate("userID", "username");
+
+    res.status(201).json(populated);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
 });
+// =======================
+// DELETE COMMENT
+// =======================
+router.delete("/:id", auth, async (req, res) => {
+  const comment = await Comment.findById(req.params.id);
 
-// Delete Comment 
-router.delete("/:id", auth, async function ( req, res ) {
+  if (!comment) {
+    return res.status(404).json({ message: "Not found" });
+  }
 
-    try {
-        const comment = await Comment.findById(req.params.id);
+  if (comment.userID.toString() !== req.user.id) {
+    return res.status(403).json({ message: "No permission" });
+  }
 
-        // Check if comment exists 
-        if (!comment) {
-            // If not return error message
-            return res.status(404).json({ error: "Comment could not be found."})
-        }
+  await comment.deleteOne();
 
-        // Only owner can delete its comment 
-        if ( comment.userID.toString() !== req.user._id.toString()) {
-            return res.status(403).json({ error : "Not allowed to delete this comment."})
-        } 
-
-        await Comment.findByIdAndDelete(req.params.id);
-
-        // Succesful message #
-        res.json({ message : "Comment deleted. "})
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-
-});
-
-// Update Comment 
-router.put("/:id", auth, async function(req,res) {
-
-    try {
-        // Fetch the comment to be updated 
-        const comment = await Comment.findById(req.params.id);
-
-        // Check if comment is found 
-        if (!comment) {
-            return res.status(404).json({ error: "Comment not found."});
-        }
-
-         // Only owner can update its comment 
-        if ( comment.userID.toString() !== req.user._id.toString()) {
-            return res.status(403).json({ error : "Not allowed to update this comment."})
-        } 
-
-        const updated = await Comment.findByIdAndUpdate( req.params.id, { comment : req.body.comment }, { new : true, runValidators: true});
-
-        // Check if comment to be uodated exists 
-        if (!updated) {
-            return res.status(404).json({ error: "Comment not found" });
-        }
-
-        res.json(updated);
-
-    } catch ( err ) {
-        res.status(500).json({ error: err.message });
-    }
-
+  res.json({ message: "Deleted" });
 });
 
 module.exports = router;
