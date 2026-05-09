@@ -12,8 +12,11 @@ export default function Register() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [dateOfBirth, setDateOfBirth] = useState("");
+  const [role, setRole] = useState("user");
 
-  const handleRegister = async () => {
+  const handleRegister = async (e) => {
+    e.preventDefault();
+
     try {
       const res = await fetch(`${API_URL}/api/auth/register`, {
         method: "POST",
@@ -22,13 +25,13 @@ export default function Register() {
         },
         credentials: "include",
         body: JSON.stringify({
-        username,
-        email,
-        password,
-        first_name: firstName,
-        last_name: lastName,
-        date_of_birth: dateOfBirth,
-        role: "user"
+          username,
+          email,
+          password,
+          first_name: firstName,
+          last_name: lastName,
+          date_of_birth: dateOfBirth,
+          role,
         }),
       });
 
@@ -38,9 +41,8 @@ export default function Register() {
         alert("User registered successfully!");
         navigate("/login");
       } else {
-        alert(data.message || data.error);
+        alert(data.message || data.error || "Registration failed");
       }
-
     } catch (err) {
       console.error(err);
       alert("Error registering user");
@@ -50,6 +52,7 @@ export default function Register() {
   return (
     <div className="page">
       <div className="auth-card">
+
         <div className="auth-left">
           <h1>Create Account</h1>
         </div>
@@ -57,45 +60,69 @@ export default function Register() {
         <div className="auth-right">
           <h2>Register</h2>
 
-          <input
-            placeholder="Username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
+          <form onSubmit={handleRegister}>
 
-          <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
+            <input
+              type="text"
+              placeholder="Username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+            />
 
-          <input
-            placeholder="First Name"
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
-          />
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
 
-          <input
-            placeholder="Last Name"
-            value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
-          />
+            <input
+              type="text"
+              placeholder="First Name"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+              required
+            />
 
-          <input
-            type="date"
-            value={dateOfBirth}
-            onChange={(e) => setDateOfBirth(e.target.value)}
-          />
+            <input
+              type="text"
+              placeholder="Last Name"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+              required
+            />
 
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+            <input
+              type="date"
+              value={dateOfBirth}
+              onChange={(e) => setDateOfBirth(e.target.value)}
+              required
+            />
 
-          <button onClick={handleRegister}>REGISTER</button>
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+
+            <select
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+            >
+              <option value="user">User</option>
+              <option value="host">Host</option>
+              <option value="admin">Admin</option>
+            </select>
+
+            <button type="submit">
+              REGISTER
+            </button>
+
+          </form>
 
           <button onClick={() => navigate("/login")}>
             Already have an account? Login
@@ -104,6 +131,7 @@ export default function Register() {
           <button onClick={() => navigate("/")}>
             Back to Home
           </button>
+
         </div>
       </div>
     </div>

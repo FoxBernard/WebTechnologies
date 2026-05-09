@@ -9,6 +9,8 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
+
+        {/* PUBLIC PAGES */}
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
