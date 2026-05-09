@@ -50,9 +50,7 @@ export default function Home() {
         <NabBar /> 
       </div>
 
-      <div className="searchBar">
-        <SearchBar onSearch={handleSearch} />
-      </div>
+      <SearchBar onSearch={handleSearch} />
 
       <div className="hero-banner">
         <h1>INVITY</h1>

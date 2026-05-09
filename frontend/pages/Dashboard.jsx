@@ -46,7 +46,7 @@ export default function Dashboard() {
     }
 
     load();
-  }, [navigate]);
+  }, [API_URL, navigate]);
 
   const handleCreate = async () => {
     const res = await fetch(`${API_URL}/api/events`, {
@@ -56,7 +56,10 @@ export default function Dashboard() {
       body: JSON.stringify({
         ...form,
         hostID: user._id,
-        date: { start: form.start, end: form.end },
+        date: {
+          start: form.start,
+          end: form.end,
+        },
       }),
     });
 
@@ -65,58 +68,65 @@ export default function Dashboard() {
     if (res.ok) {
       setEvents((prev) => [...prev, data]);
       setView("manage");
+      setForm({
+        title: "",
+        description: "",
+        location: "",
+        venue: "",
+        start: "",
+        end: "",
+      });
     } else {
       alert(data.error || "Failed");
     }
   };
 
+  const handleLogout = () => {
+    fetch(`${API_URL}/api/auth/logout`, {
+      method: "POST",
+      credentials: "include",
+    }).then(() => navigate("/login"));
+  };
+
   return (
-    <div style={{ display: "flex" }}>
+    <div className="page">
       <NabBar />
-      {/* SIDEBAR */}
-      <div style={{ width: "200px" }}>
-        <h3>Dashboard</h3>
 
-        <button onClick={() => setView("create")}>Create</button>
-        <button onClick={() => setView("manage")}>Manage</button>
+      <div className="dashboard-page">
+        <aside className="sidebar">
+          <h2>Dashboard</h2>
 
-        <button
-          onClick={() => {
-            fetch(`${API_URL}/api/auth/logout`, {
-              method: "POST",
-              credentials: "include",
-            }).then(() => navigate("/login"));
-          }}
-        >
-          Logout
-        </button>
+          <button onClick={() => setView("create")}>Create</button>
+          <button onClick={() => setView("manage")}>Manage</button>
+          <button onClick={handleLogout}>Logout</button>
+        </aside>
+
+        <main className="dashboard-content">
+          {view === "create" && (
+            <div className="event-form">
+              <h1>Create Event</h1>
+
+              {Object.keys(form).map((key) => (
+                <input
+                  key={key}
+                  placeholder={key}
+                  value={form[key]}
+                  type={key === "start" || key === "end" ? "datetime-local" : "text"}
+                  onChange={(e) =>
+                    setForm({ ...form, [key]: e.target.value })
+                  }
+                />
+              ))}
+
+              <button onClick={handleCreate}>Create</button>
+            </div>
+          )}
+
+          {view === "manage" && <EventList events={events} />}
+        </main>
       </div>
 
-      {/* MAIN */}
-      <div style={{ flex: 1 }}>
-        {view === "create" && (
-          <div>
-            <h2>Create Event</h2>
-
-            {Object.keys(form).map((key) => (
-              <input
-                key={key}
-                placeholder={key}
-                value={form[key]}
-                onChange={(e) =>
-                  setForm({ ...form, [key]: e.target.value })
-                }
-              />
-            ))}
-
-            <button onClick={handleCreate}>Create</button>
-          </div>
-        )}
-
-        {view === "manage" && <EventList events={events} />}
-      </div>
       <Footer />
     </div>
-    
   );
 }

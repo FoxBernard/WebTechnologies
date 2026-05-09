@@ -9,6 +9,7 @@
   --green: #15e68c;
   --border: #d8d8d8;
   --shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+
   font-family: Inter, system-ui, Arial, sans-serif;
 }
 
@@ -16,32 +17,17 @@
   box-sizing: border-box;
 }
 
-body {
+html,
+body,
+#root {
   margin: 0;
+  min-height: 100vh;
   background: var(--bg);
   color: var(--text);
 }
 
-#root {
-  min-height: 100vh;
-}
-
-/* NAVBAR */
-
-.navbar {
-  width: 100%;
-  background: var(--nav);
-  color: #111827;
-  padding: 18px 32px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.navbar h2 {
-  margin: 0;
-  font-size: 24px;
-  font-weight: 600;
+body {
+  overflow-x: hidden;
 }
 
 button {
@@ -60,8 +46,44 @@ button:hover {
   opacity: 0.9;
 }
 
+/* NAVBAR */
+
+.navbar {
+  width: 100%;
+  background: var(--nav);
+  color: #111827;
+  padding: 18px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar h2 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.navbar a {
+  text-decoration: none;
+}
+
+/* PAGE STRUCTURE */
+
+.page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+}
+
+.page > .navbar {
+  flex-shrink: 0;
+}
+
 /* HOME */
 
+.searchBar,
 .searchbar {
   width: min(900px, calc(100% - 32px));
   margin: 32px auto 28px;
@@ -73,6 +95,7 @@ button:hover {
   background: white;
 }
 
+.searchBar input,
 .searchbar input {
   border: none;
   border-right: 2px solid #111827;
@@ -83,6 +106,7 @@ button:hover {
   color: #111827;
 }
 
+.searchBar input:last-child,
 .searchbar input:last-child {
   border-right: none;
 }
@@ -93,8 +117,13 @@ button:hover {
   margin: 0 auto 36px;
   min-height: 230px;
   border-radius: 18px;
-  background:
-    linear-gradient(to bottom, #bdefff 0%, #eafaff 58%, #95b800 59%, #95b800 100%);
+  background: linear-gradient(
+    to bottom,
+    #bdefff 0%,
+    #eafaff 58%,
+    #95b800 59%,
+    #95b800 100%
+  );
   display: flex;
   justify-content: center;
   align-items: center;
@@ -136,8 +165,13 @@ button:hover {
 
 .imagePlaceholder {
   min-height: 160px;
-  background:
-    linear-gradient(to bottom, #bdefff 0%, #eafaff 58%, #95b800 59%, #95b800 100%);
+  background: linear-gradient(
+    to bottom,
+    #bdefff 0%,
+    #eafaff 58%,
+    #95b800 59%,
+    #95b800 100%
+  );
   display: flex;
   justify-content: center;
   align-items: center;
@@ -168,27 +202,17 @@ button:hover {
   color: #d6dde8;
 }
 
-/* LOGIN */
-
-.page {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 60px 20px;
-}
-
-.footer {
-  margin-top: 100px;
-}
+/* AUTH PAGES */
 
 .auth-card {
   display: flex;
-  width: min(900px, 100%);
+  width: min(900px, calc(100% - 32px));
   min-height: 520px;
+  margin: 70px auto;
   border-radius: 20px;
   overflow: hidden;
   box-shadow: var(--shadow);
+  background: white;
 }
 
 .auth-left {
@@ -198,15 +222,18 @@ button:hover {
   display: flex;
   justify-content: center;
   align-items: center;
+  text-align: center;
+  padding: 32px;
 }
 
 .auth-left h1 {
-  font-size: 44px;
+  font-size: clamp(34px, 5vw, 52px);
+  margin: 0;
 }
 
 .auth-right {
   flex: 1;
-  background: #6b726f;
+  background: #f8fafc;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -214,17 +241,32 @@ button:hover {
 }
 
 .auth-right h2 {
-  color: white;
-  font-size: 42px;
+  color: var(--dark);
+  font-size: clamp(32px, 4vw, 44px);
   margin: 0 0 24px;
 }
 
-.auth-right input {
-  margin-bottom: 16px;
+.auth-right form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.auth-right input,
+.auth-right select {
+  width: 100%;
+  margin-bottom: 14px;
   padding: 14px;
   border-radius: 10px;
-  border: none;
-  font-size: 18px;
+  border: 1px solid #cbd5e1;
+  font-size: 17px;
+  background: white;
+  color: var(--text);
+}
+
+.auth-right button {
+  width: 100%;
+  margin-top: 10px;
 }
 
 /* DASHBOARD */
@@ -232,6 +274,7 @@ button:hover {
 .dashboard-page {
   display: flex;
   min-height: 100vh;
+  background: white;
 }
 
 .sidebar {
@@ -244,13 +287,14 @@ button:hover {
 
 .sidebar h2 {
   margin-top: 0;
+  color: #111827;
 }
 
 .sidebar p {
   font-weight: 700;
   letter-spacing: 1px;
   text-transform: uppercase;
-  color: #ffffff;
+  color: #111827;
   cursor: pointer;
 }
 
@@ -329,6 +373,8 @@ button:hover {
 /* FOOTER */
 
 .footer {
+  width: 100%;
+  margin-top: auto;
   background: var(--dark);
   color: white;
   padding: 40px 24px 24px;
@@ -341,6 +387,7 @@ button:hover {
   display: grid;
   grid-template-columns: 2fr 1fr;
   gap: 36px;
+  align-items: start;
 }
 
 .footer-section h3 {
@@ -366,21 +413,35 @@ button:hover {
 /* RESPONSIVE */
 
 @media (max-width: 800px) {
+  .navbar {
+    padding: 16px 20px;
+  }
+
+  .searchBar,
   .searchbar {
     grid-template-columns: 1fr;
   }
 
+  .searchBar input,
   .searchbar input {
     border-right: none;
     border-bottom: 2px solid #111827;
   }
 
+  .searchBar input:last-child,
   .searchbar input:last-child {
     border-bottom: none;
   }
 
   .auth-card {
     flex-direction: column;
+    margin: 40px auto;
+  }
+
+  .auth-left,
+  .auth-right {
+    min-height: auto;
+    padding: 34px 24px;
   }
 
   .dashboard-page {
@@ -395,15 +456,211 @@ button:hover {
   .footer-top {
     grid-template-columns: 1fr;
   }
-  .auth-link {
-  margin-top: 16px;
-  color: white;
-  text-align: center;
+}
+/* FIX SEARCH BAR */
+
+.searchBar {
+  width: min(900px, calc(100% - 32px));
+  margin: 32px auto 28px;
 }
 
-.auth-link span {
-  color: var(--green);
-  font-weight: bold;
-  cursor: pointer;
+.searchBar form,
+.searchBar > div {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 180px 1fr;
 }
+
+.searchBar input {
+  width: 100%;
+}
+
+/* FIX DASHBOARD */
+
+.dashboard-page {
+  width: 100%;
+  min-height: calc(100vh - 90px);
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  background: #ffffff;
+}
+
+.sidebar {
+  background: var(--nav);
+  padding: 32px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.sidebar h2 {
+  margin: 0 0 20px;
+  color: #111827;
+}
+
+.sidebar button {
+  width: 100%;
+}
+
+.dashboard-content {
+  padding: 48px;
+  background: #ffffff;
+}
+
+.event-form {
+  max-width: 700px;
+}
+
+.event-form h1 {
+  margin-top: 0;
+  margin-bottom: 28px;
+  font-size: 42px;
+}
+
+.event-form input {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+/* MOBILE */
+
+@media (max-width: 800px) {
+  .searchBar form,
+  .searchBar > div {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-page {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-content {
+    padding: 28px 20px;
+  }
+}
+/* FINAL FIX - HOME SEARCH BAR */
+
+.searchBar {
+  width: min(900px, calc(100% - 32px));
+  margin: 32px auto 28px;
+  border: 3px solid #111827;
+  border-radius: 18px;
+  overflow: hidden;
+  background: white;
+}
+
+.searchBar form,
+.searchBar > div {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 180px 1fr;
+}
+
+.searchBar input {
+  width: 100%;
+  min-width: 0;
+  border: none;
+  border-right: 2px solid #111827;
+  padding: 16px 20px;
+  font-size: 16px;
+  outline: none;
+  background: white;
+}
+
+.searchBar input:last-child {
+  border-right: none;
+}
+
+@media (max-width: 800px) {
+  .searchBar form,
+  .searchBar > div {
+    grid-template-columns: 1fr;
+  }
+
+  .searchBar input {
+    border-right: none;
+    border-bottom: 2px solid #111827;
+  }
+
+  .searchBar input:last-child {
+    border-bottom: none;
+  }
+}
+/* HARD FIX - SEARCH BAR HOME */
+
+.searchBar,
+.searchbar,
+.search-bar {
+  width: min(900px, calc(100% - 32px)) !important;
+  margin: 32px auto 28px !important;
+  display: grid !important;
+  grid-template-columns: 1fr 180px 1fr !important;
+  border: 3px solid #111827 !important;
+  border-radius: 18px !important;
+  overflow: hidden !important;
+  background: white !important;
+}
+
+.searchBar input,
+.searchbar input,
+.search-bar input {
+  width: 100% !important;
+  min-width: 0 !important;
+  height: 56px !important;
+  border: none !important;
+  border-right: 2px solid #111827 !important;
+  padding: 0 20px !important;
+  font-size: 16px !important;
+  background: white !important;
+  outline: none !important;
+}
+
+.searchBar input:last-child,
+.searchbar input:last-child,
+.search-bar input:last-child {
+  border-right: none !important;
+}
+/* SEARCHBAR FINAL FIX */
+
+.searchbar {
+  width: min(900px, calc(100% - 32px)) !important;
+  margin: 32px auto 28px !important;
+  display: grid !important;
+  grid-template-columns: 1fr 180px 1fr !important;
+  border: 3px solid #111827 !important;
+  border-radius: 18px !important;
+  overflow: hidden !important;
+  background: white !important;
+}
+
+.searchbar input {
+  width: 100% !important;
+  min-width: 0 !important;
+  height: 56px !important;
+  border: none !important;
+  border-right: 2px solid #111827 !important;
+  padding: 0 20px !important;
+  font-size: 16px !important;
+  background: white !important;
+  color: #111827 !important;
+  outline: none !important;
+}
+
+.searchbar input:last-child {
+  border-right: none !important;
+}
+
+@media (max-width: 800px) {
+  .searchbar {
+    grid-template-columns: 1fr !important;
+  }
+
+  .searchbar input {
+    border-right: none !important;
+    border-bottom: 2px solid #111827 !important;
+  }
+
+  .searchbar input:last-child {
+    border-bottom: none !important;
+  }
 }
