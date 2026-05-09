@@ -18,12 +18,28 @@ export default function Register() {
     e.preventDefault();
 
     try {
+      const payload = {
+        username: username.trim(),
+        email: email.trim(),
+        password: password,
+        firstName: firstName.trim(),
+        lastName: lastName.trim(),
+        dateOfBirth,
+      };
+
+      // basic frontend validation
+      if (!payload.username || !payload.email || !payload.password) {
+        alert("Please fill in all required fields");
+        return;
+      }
+
       const res = await fetch(`${API_URL}/api/auth/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         credentials: "include",
+<<<<<<< HEAD
         body: JSON.stringify({
           username,
           email,
@@ -33,6 +49,9 @@ export default function Register() {
           date_of_birth: dateOfBirth,
           role,
         }),
+=======
+        body: JSON.stringify(payload),
+>>>>>>> 5490d657f43920c8282fb8235822071af6de8f5e
       });
 
       const data = await res.json();
@@ -41,11 +60,15 @@ export default function Register() {
         alert("User registered successfully!");
         navigate("/login");
       } else {
+<<<<<<< HEAD
         alert(data.message || data.error || "Registration failed");
+=======
+        alert(data.message || "Registration failed");
+>>>>>>> 5490d657f43920c8282fb8235822071af6de8f5e
       }
     } catch (err) {
-      console.error(err);
-      alert("Error registering user");
+      console.error("REGISTER ERROR:", err);
+      alert("Server error");
     }
   };
 

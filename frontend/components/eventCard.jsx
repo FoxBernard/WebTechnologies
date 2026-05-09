@@ -1,21 +1,16 @@
-export default function EventCard({ title, description, location, venue, start }) {
-  const formattedDate = start
-    ? new Date(start).toLocaleString()
-    : "Date TBC";
+import Comments from "./Comments";
+
+export default function EventCard({ event, showComments = true }) {
+  if (!event?._id) return null;
 
   return (
     <div className="eventCard">
-      <div className="imagePlaceholder">
-        <h1>EVENT</h1>
-      </div>
+      <h3>{event.title}</h3>
+      <p>{event.location}</p>
+      <p>{event.venue}</p>
 
-      <div className="eventInfo">
-        <h3>{title}</h3>
-        <p>{description}</p>
-        <p>📍 {location || "Location TBC"}</p>
-        <p>{venue || "Venue TBC"}</p>
-        <p>🕒 {formattedDate}</p>
-      </div>
+      {/* COMMENTS ONLY IF ALLOWED */}
+      {showComments && <Comments eventId={event._id} />}
     </div>
   );
 }
