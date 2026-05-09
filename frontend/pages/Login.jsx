@@ -1,60 +1,83 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+const API_URL = "http://localhost:9000";
 
 export default function Login() {
-   
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
-    const handleLogin = async () => {
-        try {
-            console.log("LOGIN CLICKED");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
-        const res = await fetch("http://localhost:9000/api/auth/login", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            credentials: "include",
-            body: JSON.stringify({ username, password })
-        });
+  const handleLogin = async () => {
+    try {
+      const res = await fetch(`${API_URL}/api/auth/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          username,
+          password,
+        }),
+      });
 
-        const data = await res.json();
-        console.log("LOGIN RESPONSE:", data);
+      const data = await res.json();
 
-        if (data.success) {
-            onLoginSuccess();
-        } else {
-            alert(data.message || "Login failed");
-        }
+      if (res.ok && data.success) {
+        navigate("/dashboard");
+      } else {
+        alert(data.message || data.error || "Login failed");
+      }
     } catch (err) {
-        console.error("LOGIN ERROR:", err);
+      console.error("Login error:", err);
+      alert("Error logging in");
     }
   };
-   
-    return (
-    <div style={{ padding: 20 }}>
-      <h1>Login</h1>
 
-      <input
-        placeholder="username"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-      />
+  return (
+    <div className="page">
+      <div className="auth-card">
+        <div className="auth-left">
+          <h1>Welcome</h1>
+        </div>
 
-      <br />
+        <div className="auth-right">
+          <h2>Sign in</h2>
 
-      <input
-        type="password"
-        placeholder="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
+          <input
+            placeholder="Username or Email"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
 
-      <br />
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
 
-      <button onClick={handleLogin}>
-        Login
-      </button>
+          <button type="button" onClick={handleLogin}>
+            LOG IN
+          </button>
+
+          <button type="button" onClick={() => navigate("/register")}>
+            Don't have an account? Register
+          </button>
+
+          <button type="button" onClick={() => navigate("/")}>
+            Back to Home
+          </button>
+        </div>
+      </div>
     </div>
   );
+<<<<<<< HEAD
 }
 
 
+=======
+}
+>>>>>>> c8aa785074932e171b95456cc1cef906c9a6755c
