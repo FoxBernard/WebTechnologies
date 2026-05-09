@@ -39,36 +39,30 @@ export default function Register() {
           "Content-Type": "application/json",
         },
         credentials: "include",
-<<<<<<< HEAD
         body: JSON.stringify({
-          username,
-          email,
-          password,
-          first_name: firstName,
-          last_name: lastName,
-          date_of_birth: dateOfBirth,
-          role,
+        username,
+        email,
+        password,
+        first_name: firstName,
+        last_name: lastName,
+        date_of_birth: dateOfBirth,
+        role: "user"
         }),
-=======
         body: JSON.stringify(payload),
->>>>>>> 5490d657f43920c8282fb8235822071af6de8f5e
       });
 
       const data = await res.json();
+
 
       if (res.ok) {
         alert("User registered successfully!");
         navigate("/login");
       } else {
-<<<<<<< HEAD
         alert(data.message || data.error || "Registration failed");
-=======
-        alert(data.message || "Registration failed");
->>>>>>> 5490d657f43920c8282fb8235822071af6de8f5e
       }
     } catch (err) {
-      console.error("REGISTER ERROR:", err);
-      alert("Server error");
+      console.error(err);
+      alert("Error registering user");
     }
   };
 
