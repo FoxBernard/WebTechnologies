@@ -1,119 +1,117 @@
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import EventList from "../components/EventList";
+
 export default function Dashboard() {
-    return <div>Dashboard Page</div>
+  const navigate = useNavigate();
+
+  const [user, setUser] = useState(null);
+  const [events, setEvents] = useState([]);
+  const [view, setView] = useState("create");
+
+  const API_URL = import.meta.env.VITE_REACT_APP_API_URL;
+
+  const [form, setForm] = useState({
+    title: "",
+    description: "",
+    location: "",
+    venue: "",
+    start: "",
+    end: "",
+  });
+
+  useEffect(() => {
+    async function load() {
+      const meRes = await fetch(`${API_URL}/api/auth/me`, {
+        credentials: "include",
+      });
+
+      const meData = await meRes.json();
+
+      if (!meRes.ok || !meData.user) {
+        navigate("/login");
+        return;
+      }
+
+      setUser(meData.user);
+
+      const eventsRes = await fetch(`${API_URL}/api/events`, {
+        credentials: "include",
+      });
+
+      const eventsData = await eventsRes.json();
+      setEvents(Array.isArray(eventsData) ? eventsData : []);
+    }
+
+    load();
+  }, [navigate]);
+
+  const handleCreate = async () => {
+    const res = await fetch(`${API_URL}/api/events`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({
+        ...form,
+        hostID: user._id,
+        date: { start: form.start, end: form.end },
+      }),
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      setEvents((prev) => [...prev, data]);
+      setView("manage");
+    } else {
+      alert(data.error || "Failed");
+    }
+  };
+
+  return (
+    <div style={{ display: "flex" }}>
+      {/* SIDEBAR */}
+      <div style={{ width: "200px" }}>
+        <h3>Dashboard</h3>
+
+        <button onClick={() => setView("create")}>Create</button>
+        <button onClick={() => setView("manage")}>Manage</button>
+
+        <button
+          onClick={() => {
+            fetch(`${API_URL}/api/auth/logout`, {
+              method: "POST",
+              credentials: "include",
+            }).then(() => navigate("/login"));
+          }}
+        >
+          Logout
+        </button>
+      </div>
+
+      {/* MAIN */}
+      <div style={{ flex: 1 }}>
+        {view === "create" && (
+          <div>
+            <h2>Create Event</h2>
+
+            {Object.keys(form).map((key) => (
+              <input
+                key={key}
+                placeholder={key}
+                value={form[key]}
+                onChange={(e) =>
+                  setForm({ ...form, [key]: e.target.value })
+                }
+              />
+            ))}
+
+            <button onClick={handleCreate}>Create</button>
+          </div>
+        )}
+
+        {view === "manage" && <EventList events={events} />}
+      </div>
+    </div>
+  );
 }
-
-
-// // import { useEffect, useState } from "react";
-// import { getMe, login, logout } from "../api/auth";
-
-// export default function Dashboard() {
-//   const [user, setUser] = useState(null);
-//   const [events, setEvents] = useState([]);
-//   const [selectedEvent, setSelectedEvent] = useState(null);
-
-//   const [title, setTitle] = useState("");
-//   const [description, setDescription] = useState("");
-
-//   // ======================
-//   // LOAD USER + EVENTS
-//   // ======================
-//   useEffect(() => {
-//     const init = async () => {
-//       const me = await getMe();
-
-//       if (!me.success) {
-//         window.location.href = "/login";
-//         return;
-//       }
-
-//       setUser(me.user);
-
-//       const res = await fetch("http://localhost:9000/events", {
-//         credentials: "include",
-//       });
-//       const data = await res.json();
-
-//        setEvents(data.events || []);
-//     };
-
-//     init();
-//   }, []);
-
-//   // ======================
-//   // CREATE EVENT
-//   // ======================
-//   const createEvent = async () => {
-//     const res = await fetch("http://localhost:9000/events", {
-//       method: "POST",
-//       headers: { "Content-Type": "application/json" },
-//       credentials: "include",
-//       body: JSON.stringify({ title, description }),
-//     });
-
-//     const data = await res.json();
-
-//     setEvents([...events, data.event || data]);
-//     setTitle("");
-//     setDescription("");
-//   };
-
-//   // ======================
-//   // UI
-//   // ======================
-//   if (!user) return <p>Loading...</p>;
-
-//   return (
-//     <div style={{ padding: "20px" }}>
-//       <h1>Dashboard</h1>
-
-//       <p>Welcome, {user.username}</p>
-
-//       {/* CREATE EVENT */}
-//       <div>
-//         <h2>Create Event</h2>
-
-//         <input
-//           placeholder="Title"
-//           value={title}
-//           onChange={(e) => setTitle(e.target.value)}
-//         />
-
-//         <input
-//           placeholder="Description"
-//           value={description}
-//           onChange={(e) => setDescription(e.target.value)}
-//         />
-
-//         <button onClick={createEvent}>Create</button>
-//       </div>
-
-//       {/* EVENT LIST */}
-//       <div>
-//         <h2>Your Events</h2>
-
-//         {events.map((event) => (
-//           <div
-//             key={event._id}
-//             onClick={() => setSelectedEvent(event)}
-//             style={{ cursor: "pointer", margin: "10px 0" }}
-//           >
-//             <strong>{event.title}</strong>
-//           </div>
-//         ))}
-//       </div>
-
-//       {/* EVENT DETAILS */}
-//       {selectedEvent && (
-//         <div>
-//           <h2>Event Details</h2>
-
-//           <p>{selectedEvent.title}</p>
-//           <p>{selectedEvent.description}</p>
-
-//           <button>Invite Users (next step)</button>
-//           <button>Comments (next step)</button>
-//         </div>
-//       )}
-//     </div>
-//   );
-// }

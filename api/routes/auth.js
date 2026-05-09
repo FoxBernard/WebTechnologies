@@ -65,83 +65,66 @@ router.post("/register", async (req, res) => {
     }
 });
 
+
+
 // LOGIN
 router.post("/login", async (req, res) => {
+  console.log("LOGIN HIT");
 
-    console.log("LOGIN HIT"); // Check if route is working with bruno
-    try {
+  try {
+    const { username, password } = req.body;
 
-        
-        const { username, password } = req.body;
-
-        // Validation
-        if (!username || !password) {
-            return res.status(400).json({
-                success: false,
-                message: "Username and password are required"
-            });
-        }
-
-        console.log("LOGIN BODY:", req.body); 
-
-
-        // Allows user to login with email or username 
-        const user = await User.findOne({$or: [{ username: username }, { email: username }] });
-
-        console.log("FOUND USER:", user);
-
-        if (!user) {
-            return res.status(401).json({
-                success: false,
-                message: "User does not exist"
-            });
-        }
-
-        const isMatch = await bcrypt.compare(password, user.password);
-
-        if (!isMatch) {
-            return res.status(401).json({
-                success: false,
-                message: "Invalid password credentials"
-            });
-        }
-
-        // Store user in session
-        req.session.user = {
-            id: user._id,
-            username: user.username,
-            role: user.role
-        };
-
-        res.status(200).json({
-            success: true,
-            message: "Logged in successfully",
-            user: req.session.user
-        });
-    } catch (error) {
-        console.error("Login error:", error);
-        res.status(500).json({
-            success: false,
-            message: "Server error during login"
-        });
-    }
-});
-
-// CHECK CURRENT SESSION
-router.get("/me", (req, res) => {
-    if (!req.session.user) {
-        return res.status(401).json({
-            success: false,
-            message: "No active session"
-        });
+    if (!username || !password) {
+      return res.status(400).json({
+        success: false,
+        message: "Username and password are required",
+      });
     }
 
-    res.status(200).json({
-        success: true,
-        user: req.session.user
+    console.log("LOGIN BODY:", req.body);
+
+    const user = await User.findOne({
+      $or: [{ username }, { email: username }],
     });
+
+    console.log("FOUND USER:", user);
+
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        message: "User does not exist",
+      });
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (!isMatch) {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid password credentials",
+      });
+    }
+
+    req.session.user = {
+  id: user._id.toString(),   // ✅ FIXED
+  username: user.username,
+  role: user.role,
+};
+    res.status(200).json({
+      success: true,
+      message: "Logged in successfully",
+      user: req.session.user,
+    });
+  } catch (error) {
+    console.error("Login error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error during login",
+    });
+  }
 });
 
+module.exports = router;
 // LOGOUT
 router.post("/logout", (req, res) => {
     
@@ -167,6 +150,14 @@ router.post("/logout", (req, res) => {
             message: "Logged out successfully"
         });
     });
+});
+// GET CURRENT USER (SESSION)
+router.get("/me", (req, res) => {
+  if (!req.session.user) {
+    return res.status(401).json({ error: "Not logged in" });
+  }
+
+  res.json({ user: req.session.user });
 });
 
 module.exports = router;
