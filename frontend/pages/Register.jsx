@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import NabBar from "../components/NavBar";
+import Footer from "../components/Footer";
 
 const API_URL = "http://localhost:9000";
 
@@ -68,6 +70,11 @@ export default function Register() {
 
   return (
     <div className="page">
+
+      <div className="navbar">
+        <NabBar /> 
+      </div>
+      
       <div className="auth-card">
 
         <div className="auth-left">
@@ -151,6 +158,7 @@ export default function Register() {
 
         </div>
       </div>
+      <div className="footer"> <Footer /> </div>
     </div>
   );
 }

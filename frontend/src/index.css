@@ -171,11 +171,15 @@ button:hover {
 /* LOGIN */
 
 .page {
-  min-height: calc(100vh - 70px);
+  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 40px 20px;
+  padding: 60px 20px;
+}
+
+.footer {
+  margin-top: 100px;
 }
 
 .auth-card {

@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import NabBar from "../components/NavBar";
+import Footer from "../components/Footer";
 
 const API_URL = "http://localhost:9000";
 
@@ -38,6 +40,11 @@ export default function Login() {
 
   return (
     <div className="page">
+
+      <div className="navbar">
+        <NabBar /> 
+      </div>
+      
       <div className="auth-card">
         <div className="auth-left">
           <h1>Welcome</h1>
@@ -72,6 +79,8 @@ export default function Login() {
           </button>
         </div>
       </div>
+      <Footer /> 
     </div>
+    
   );
 }

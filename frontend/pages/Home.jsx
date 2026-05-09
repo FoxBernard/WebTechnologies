@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import EventCard from "../components/EventCard";
 import SearchBar from "../components/SearchBar";
+import NabBar from "../components/NavBar";
+import Footer from "../components/Footer";
 
 const API_URL = "http://localhost:9000";
 
@@ -45,11 +47,7 @@ export default function Home() {
   return (
     <>
       <div className="navbar">
-        <h2>INVITY</h2>
-        <div>
-          <button onClick={() => navigate("/login")}>Login</button>
-          <button onClick={() => navigate("/register")}>Register</button>
-        </div>
+        <NabBar /> 
       </div>
 
       <div className="searchBar">
@@ -74,9 +72,8 @@ export default function Home() {
         )}
       </div>
 
-      <footer className="footer">
-        <p>&copy; {new Date().getFullYear()} INVITY Events. All rights reserved.</p>
-      </footer>
+      <Footer />
+
     </>
   );
 }

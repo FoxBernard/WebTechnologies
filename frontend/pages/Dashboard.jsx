@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import EventList from "../components/EventList";
+import NabBar from "../components/NavBar";
+import Footer from "../components/Footer";
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -70,6 +72,7 @@ export default function Dashboard() {
 
   return (
     <div style={{ display: "flex" }}>
+      <NabBar />
       {/* SIDEBAR */}
       <div style={{ width: "200px" }}>
         <h3>Dashboard</h3>
@@ -112,6 +115,8 @@ export default function Dashboard() {
 
         {view === "manage" && <EventList events={events} />}
       </div>
+      <Footer />
     </div>
+    
   );
 }
